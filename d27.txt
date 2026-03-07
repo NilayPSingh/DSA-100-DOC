@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* append(struct Node* head, int val) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = val;
+    newNode->next = NULL;
+    if (!head) return newNode;
+    struct Node* temp = head;
+    while (temp->next) temp = temp->next;
+    temp->next = newNode;
+    return head;
+}
+
+int length(struct Node* head) {
+    int len = 0;
+    while (head) head = head->next, len++;
+    return len;
+}
+
+struct Node* intersection(struct Node* a, struct Node* b) {
+    int lenA = length(a), lenB = length(b);
+    while (lenA > lenB) a = a->next, lenA--;
+    while (lenB > lenA) b = b->next, lenB--;
+    while (a && b) {
+        if (a->data == b->data) return a;
+        a = a->next;
+        b = b->next;
+    }
+    return NULL;
+}
+
+int main() {
+    int n, m, val;
+    struct Node *head1 = NULL, *head2 = NULL;
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        head1 = append(head1, val);
+    }
+    scanf("%d", &m);
+    for (int i = 0; i < m; i++) {
+        scanf("%d", &val);
+        head2 = append(head2, val);
+    }
+    struct Node* inter = intersection(head1, head2);
+    if (inter) printf("%d\n", inter->data);
+    else printf("No Intersection\n");
+    return 0;
+}
